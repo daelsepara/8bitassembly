@@ -1,5 +1,5 @@
 ; program to compute for primes between [1, 1000]
-; lacks display. adding routine ruins the stack
+; lacks display. adding print routine ruins the stack
 
 start:
 	CALL prime
