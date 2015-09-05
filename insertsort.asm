@@ -1,21 +1,24 @@
 ; Sorting via insertion-sort
 ; see https://en.wikipedia.org/wiki/Insertion_sort
-	
+
+	MOV C, 8		; sort 8 characters
+	PUSH C
 	CALL sort		; sort list
-	
+	POP C
+
 	MOV D, 232		; offset for display
-	MOV A, lastname	; location of sorted elements
-	ADD A, 7
-	MOV C, 8		; print eight characters
+	MOV A, C
+	DEC A
+	ADD A, lastname		; location of sorted elements
 
 print:
 
-	MOV B,[A]		; display one-character at a time
+	MOV B,[A]	; display one-character at a time
 	MOV [D],B
 	
-	INC D			; move on to next character
-	DEC A			; switch to INC A and remove ADD,7
-					; to change sort order ascending/descending
+	INC D		; move on to next character
+	DEC A		; switch to INC A and remove ADD,7
+			; to change sort order ascending/descending
 	DEC C			
 	JNZ print
 	
@@ -34,8 +37,8 @@ for:
 	
 	MOV D, lastname		; sort in place
 	
-	MOV A, [SP+1]		; i < 8 ?
-	CMP A, 8		
+	MOV A, [SP+1]		; i < length ?
+	CMP A, [SP+4]		
 	JZ sortend
 	
 	MOV B, A		
