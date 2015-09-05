@@ -5,8 +5,8 @@
 	
 	MOV D, 232		; offset for display
 	MOV A, lastname	; location of sorted elements
-	ADD A, 5
-	MOV C, 6		; print six characters
+	ADD A, 7
+	MOV C, 8		; print eight characters
 
 print:
 
@@ -14,7 +14,7 @@ print:
 	MOV [D],B
 	
 	INC D			; move on to next character
-	DEC A			; switch to INC A and remove ADD,5
+	DEC A			; switch to INC A and remove ADD,7
 					; to change sort order ascending/descending
 	DEC C			
 	JNZ print
@@ -22,7 +22,7 @@ print:
 end:
 	HLT
 
-lastname: DB "ARAPES"
+lastname: DB "LASTNAME"
 
 sort:
 	SUB SP, 2		; allocate 2 variables on the stack
@@ -34,8 +34,8 @@ for:
 	
 	MOV D, lastname		; sort in place
 	
-	MOV A, [SP+1]		; i < 6 ?
-	CMP A, 6		
+	MOV A, [SP+1]		; i < 8 ?
+	CMP A, 8		
 	JZ sortend
 	
 	MOV B, A		
