@@ -1,15 +1,33 @@
 ; Sorting via insertion-sort
 ; see https://en.wikipedia.org/wiki/Insertion_sort
 
-	MOV C, 8		; sort 8 characters
+	XOR C,C
+	MOV D, lastname
+	PUSH D			; add to stack on the call to sort
+
+strlen:
+
+	MOV A,[D]
+	CMP A, 0
+	JZ strend
+	INC C
+	INC D
+	JMP strlen
+
+strend:
+
 	PUSH C
 	CALL sort		; sort list
 	POP C
-
+	POP D			; balance the stack
+	
 	MOV D, 232		; offset for display
+	
+	; Change the next 3 lines to just: MOV A, lastname
+	; for descending sort order
 	MOV A, C
 	DEC A
-	ADD A, lastname		; location of sorted elements
+	ADD A, lastname	; location of sorted elements
 
 print:
 
@@ -17,15 +35,18 @@ print:
 	MOV [D],B
 	
 	INC D		; move on to next character
-	DEC A		; switch to INC A and remove ADD,7
-			; to change sort order ascending/descending
+	DEC A		; Change to INC A for descending sort order
+				
 	DEC C			
 	JNZ print
 	
 end:
 	HLT
 
-lastname: DB "LASTNAME"
+lastname:
+
+	DB "LASTNAME"	; data to sort
+	DB 0			; marker for end of data
 
 sort:
 	SUB SP, 2		; allocate 2 variables on the stack
@@ -35,7 +56,7 @@ sort:
 	; for (i = 1; i < length(A); i++)
 for:
 	
-	MOV D, lastname		; sort in place
+	MOV D, [SP+5]		; points to lastname via the stack
 	
 	MOV A, [SP+1]		; i < length ?
 	CMP A, [SP+4]		
