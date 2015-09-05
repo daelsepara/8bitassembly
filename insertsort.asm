@@ -4,7 +4,7 @@
 	CALL sort		; sort list
 	
 	MOV D, 232		; offset for display
-	MOV A, sorted	; location of sorted elements
+	MOV A, lastname	; location of sorted elements
 	ADD A, 5
 	MOV C, 6		; print six characters
 
@@ -14,16 +14,15 @@ print:
 	MOV [D],B
 	
 	INC D			; move on to next character
-	DEC A
-	DEC C
-	
+	DEC A			; switch to INC A and remove ADD,5
+					; to change sort order ascending/descending
+	DEC C			
 	JNZ print
 	
 end:
 	HLT
 
-sorted:   DB "000000"
-lastname: DB "SEPARA"
+lastname: DB "ARAPES"
 
 sort:
 	SUB SP, 2		; allocate 2 variables on the stack
@@ -33,21 +32,21 @@ sort:
 	; for (i = 1; i < length(A); i++)
 for:
 	
-	MOV D, sorted	; actual data is at the bottom of list
+	MOV D, lastname		; sort in place
 	
-	MOV A, [SP+1]	; i < 12 ?
-	CMP A, 12		
+	MOV A, [SP+1]		; i < 6 ?
+	CMP A, 6		
 	JZ sortend
 	
 	MOV B, A		
 	ADD B,D
 	MOV C,[B]		; x = A[i]
 	
-	MOV [SP+2], A	; j = i
+	MOV [SP+2], A		; j = i
 
 while:
 
-	MOV A,[SP+2]	; j > 0 ?
+	MOV A,[SP+2]		; j > 0 ?
 	CMP A, 0		
 	JZ endwhile	
 
@@ -55,16 +54,13 @@ while:
 	ADD A,D
 	MOV B,[A]		; A[j-1]
 
-	; switch comparison to sort ascending/descending as well as
-	; the order of the data
-	
-	CMP B,C			; A[j-1] > x ?
+	CMP B,C			; A[j-1] < x ?
 	JNB endwhile
 
 	INC A		
 	MOV [A], B		; A[j] = A[j-1]
 
-	MOV A,[SP+2]	; j = j - 1
+	MOV A,[SP+2]		; j = j - 1
 	DEC A
 	MOV [SP+2], A
 
@@ -72,11 +68,11 @@ while:
 
 endwhile:		
 
-	MOV A,[SP+2]	; A[j] = x
+	MOV A,[SP+2]		; A[j] = x
 	ADD A,D
 	MOV [A], C
 
-	MOV A,[SP+1]	; i = i + 1
+	MOV A,[SP+1]		; i = i + 1
 	INC A
 	MOV [SP+1],A
 	
