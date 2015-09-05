@@ -1,10 +1,11 @@
-; Sorting via insert-sort
+; Sorting via insertion-sort
 ; see https://en.wikipedia.org/wiki/Insertion_sort
-
+	
 	CALL sort		; sort list
 	
 	MOV D, 232		; offset for display
 	MOV A, sorted	; location of sorted elements
+	ADD A, 5
 	MOV C, 6		; print six characters
 
 print:
@@ -13,16 +14,14 @@ print:
 	MOV [D],B
 	
 	INC D			; move on to next character
-	INC A
+	DEC A
 	DEC C
 	
 	JNZ print
 	
 end:
-	
 	HLT
 
-length: 6
 sorted:   DB "000000"
 lastname: DB "SEPARA"
 
@@ -59,7 +58,7 @@ while:
 	; switch comparison to sort ascending/descending as well as
 	; the order of the data
 	
-	CMP B,C			; A[j-1] < x ?
+	CMP B,C			; A[j-1] > x ?
 	JNB endwhile
 
 	INC A		
@@ -88,5 +87,3 @@ sortend:
 	; rebalance SP to avoid crash 
 	ADD SP, 2
 	RET
-		
-	

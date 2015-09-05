@@ -1,5 +1,5 @@
 ; program to compute for primes between [1, 1000]
-; lacks display. adding print routine ruins the stack
+; Lacks display. adding print routine ruins the stack
 
 start:
 	CALL prime
@@ -7,6 +7,8 @@ end:
 	HLT
 
 count:	DB 0
+sumL:	DB 0
+sumH:	DB 0
 lsb:	DB 0x00
 msb: 	DB 0x00
 divL:	DB 0
@@ -130,5 +132,17 @@ divstart:
 	MOV A,[count]
 	INC A
 	MOV [count], A
+	
+	MOV A,[lsb]
+	MOV D,[msb]
+	MOV B,[sumL]
+	MOV C,[sumH]
+	ADD A,B
+	JNC .nc2
+	INC C
+.nc2:
+	ADD C,D
+	MOV [sumL],A
+	MOV [sumH],C
 	
 	JMP main
