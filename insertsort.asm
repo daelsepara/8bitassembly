@@ -53,10 +53,10 @@ sort:
 	MOV [SP+1], 1	; i
 	MOV [SP+2], 0	; j
 
+	MOV D, [SP+5]		; points to lastname via the stack
+	
 	; for (i = 1; i < length(A); i++)
 for:
-	
-	MOV D, [SP+5]		; points to lastname via the stack
 	
 	MOV A, [SP+1]		; i < length ?
 	CMP A, [SP+4]		
