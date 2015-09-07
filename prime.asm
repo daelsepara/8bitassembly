@@ -64,15 +64,21 @@ divisors:
  OR A, A
  JZ main
  
- DEC A
- MOV [divH], A
- 
 .nz2: 
 
+ ;start at number - 1 
  MOV A, [divL]
  DEC A
  MOV [divL], A
+ JNC .nc2
+ 
+ ; handle carry
+ MOV B, [divH]
+ DEC B
+ MOV [divH], C
 
+.nc2:
+ 
  ; do not process even divisors
  AND A,1
  JZ divisors
@@ -132,12 +138,12 @@ divstart:
  
  ADD A,B
  MOV [sumL],A
- JNC .nc2
+ JNC .nc3
  
  ; handle overflow
  INC C
 
-.nc2:
+.nc3:
  
  ADD C,D
  MOV [sumH],C
