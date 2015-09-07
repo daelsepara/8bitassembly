@@ -118,7 +118,7 @@ automata:
 	; copy cells (display -> world)
 	MOV B,[D]
 	
-	; only works because '0' has a bit-0 that is set
+	; only works because '1' has a bit-0 that is set
 	AND B,1
 	MOV [A],B
 	
