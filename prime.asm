@@ -9,10 +9,11 @@ end:
 
  HLT
 
-count: DB 0
-sumL: DB 0
+count: DB 1
+sumL: DB 2
 sumH: DB 0
-lsb: DB 0x00
+sumD: DB 0
+lsb: DB 0x03
 msb:  DB 0x00
 divL: DB 0
 divH: DB 0
@@ -39,18 +40,10 @@ main:
 .nc1:
  
  MOV A,[lsb]
- MOV B,A
  
  ; do not process even numbers
- AND B, 1
- JNZ prime
- 
- ; handle the case of 2
- CMP A,2
- JNZ main
- MOV A,[msb]
- OR A, A 
- JNZ main
+ AND A, 1
+ JZ main
  
 prime:
 
@@ -119,19 +112,10 @@ divstart:
  JNZ divisors
 
  ; check if divisor == 1
- CMP C,1
+ CMP C, 1
  JNZ main
  OR B,B
  JNZ main
-
- ; check if number >= 2
- MOV A, [lsb]
- CMP A, 2
- JNB .nz3
- 
- MOV A, [msb]
- OR A, A
- JZ main 
 
 .nz3:
  
@@ -147,15 +131,21 @@ divstart:
  MOV C,[sumH]
  
  ADD A,B
+ MOV [sumL],A
  JNC .nc2
  
  ; handle overflow
  INC C
 
 .nc2:
-
+ 
  ADD C,D
- MOV [sumL],A
  MOV [sumH],C
+ JNC main
+ 
+ ; handle overflow
+ MOV A, [sumD]
+ INC A
+ MOV [sumD], A
  
  JMP main
