@@ -1,5 +1,5 @@
 ; program to compute for primes between [1, 1000]
-; Lacks display. adding print routine ruins the stack
+; Lacks display. 
 
 start:
 
@@ -66,7 +66,7 @@ divisors:
  
 .nz2: 
 
- ;start at number - 1 
+ ; start at number - 1 
  MOV A, [divL]
  DEC A
  MOV [divL], A
