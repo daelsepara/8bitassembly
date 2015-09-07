@@ -2,19 +2,16 @@
 	HLT
 
 cellval:
-	; determine cell value
-	; use periodic boundary conditions
-	
-	; inputs:
+	; Determine cell value. Use periodic boundary conditions
+	;
+	; Inputs:
 	;
 	; A - offset of current cell
 	;
-	; returns:
+	; Returns:
 	;
 	; A - cell value
-	PUSH D
 	PUSH C
-	PUSH B
 	
 	MOV D, world
 	MOV C, A
@@ -56,29 +53,30 @@ cellval:
 	JZ .z2
 
 	ADD A, 4	; cell value += 4
+	
 .z2:
-	MOV D, [C]
+	MOV D, [C]	; check right neighbor
 	OR D,D
 	JZ .z3
 	
 	ADD A, 1	; cell value += 1
+	
 .z3:
-	POP B
 	POP C
-	POP D
 	RET
 	
 automata:
 	; C = 0
 	XOR C,C
+
 .loop:
-	; point to display offset
-	MOV D, 232
-	
 	; compute cell value
 	MOV A, C
 	CALL cellval
 
+	; point to display offset
+	MOV D, 232
+	
 	; apply rule
 	MOV B,1
 	SHL B,A
@@ -89,6 +87,7 @@ automata:
 
 	; cell is alive
 	MOV B, '1'
+	
 .set:
 	; set cell state on display
 	ADD D,C
@@ -106,19 +105,19 @@ automata:
 
 	MOV A, [genH]
 	CMP A, [limH]
-	JNZ .nz3
+	JZ .endautomata
 	
-	JMP .endautomata
 .nz3:
 	; initialize copy-operation 
 	MOV A, world
 	MOV D, 232
 	MOV C, 24
+	
 .copy:
 	; copy cells (display -> world)
 	MOV B,[D]
 	
-	; only works because '1' has a bit-0 that is set
+	; this works because '1' has bit 0 = 1
 	AND B,1
 	MOV [A],B
 	
