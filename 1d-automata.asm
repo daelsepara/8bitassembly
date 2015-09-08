@@ -124,8 +124,8 @@ automata:
 	; copy next cell
 	INC A
 	INC D
+
 	DEC C
-	
 	JNZ .copy
 	
 	; generation = generation + 1
