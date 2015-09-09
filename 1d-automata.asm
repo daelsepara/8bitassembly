@@ -15,32 +15,29 @@ cellval:
 	PUSH D
 
 	MOV D, world
+	ADD A, D
 	MOV C, A
 	MOV B, A
 	
 	; determine left neighbor
-	OR B,B
-	JNZ .nz1
-	MOV B, 24
-
-.nz1:
 	DEC B
+	CMP B, world
+	JNBE .nz1
+
+	MOV B, worldend
 	
+.nz1:
+
 	; determine right neighbor
-	CMP C, 23
-	JNZ .nz2
+	INC C
+	CMP C, worldend
+	JBE .nz2
 	
-	MOV C, 0xFF
+	MOV C, world
 
 .nz2:
-	; Note: carry flag is ignored
-	INC C
-	
-	; set correct locations
-	ADD A,D
-	ADD B,D
-	ADD C,D
 
+	; compute cell value
 	MOV D,[A]	
 	XOR A,A		; cell value = 0
 	OR D,D		; check if current cell is alive
@@ -171,6 +168,7 @@ world:
 	DB 0
 	DB 0
 	DB 0
+worldend:
 	DB 0
 
 ; generations
