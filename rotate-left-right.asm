@@ -15,7 +15,7 @@
 ;
 ; Output: ROR A, 1
 ;
-ror:
+.ror:
 	
 	MOV B, A
 	; rotate by shifting right once
