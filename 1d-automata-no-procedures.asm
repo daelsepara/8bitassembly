@@ -1,12 +1,16 @@
-	CALL automata
-	HLT
+; implement 1D cellular automata as a single program without procedures
+automata:
+	
+	; intialize loop, start at the end of the world
+	MOV C, 23
+	MOV D, 255
 
-cellval:
-	; Determine cell value. Use periodic boundary conditions
-	;
-	; Inputs:	A - offset of current cell
-	;
-	; Returns:	A - cell value
+.loop:
+	
+	; compute cell value
+	MOV A, C
+	
+	; save loop counter and pointer to display
 	PUSH C
 	PUSH D
 
@@ -54,23 +58,15 @@ cellval:
 	INC A
 	
 .z3:
+	; restore display pointer and loop counter
 	POP D
 	POP C
-	RET
-
-automata:
-	; intialize loop, start at the end
-	MOV C, 23
-	MOV D, 255
-.loop:
-	; compute cell value
-	MOV A, C
-	CALL cellval
 	
 	; apply rule to current cell, set '1' if alive
 	MOV B,1
 	SHL B,A
-	AND B,[rule]
+	; apply rule 22
+	AND B, 22
 	MOV B, 0
 	JZ .set
 	MOV B, '1'	
@@ -111,17 +107,14 @@ automata:
 	MOV [genH], A
 
 .nc1:
-	; check if iteration limit was reached
-	CMP A, [limH]
+	; check if iteration limit was reached (1000)
+	CMP A, 0xE8
 	JNZ automata
 	MOV A, [genL]
-	CMP A, [limL]
+	CMP A, 0x03
 	JNZ automata
-	RET
-
-rule:
-	; 1D-CA Rule to apply
-	DB 22 	
+	
+	HLT
 
 world:
 	; initial configuration of the world (1 => alive, 0 => dead)	
@@ -155,7 +148,3 @@ world_end:
 ; generations (low, high bytes)
 genL:	DB 0	
 genH:	DB 0
-
-; iteration limit (low, high bytes)
-limL:	DB 0xE8	
-limH:	DB 0x03
