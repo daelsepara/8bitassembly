@@ -12,20 +12,16 @@
 
 	
 	MOV C, 5
-	; ROR A, 5
 loopr:
-	
+	; ROR A, 5
 	CALL .ror
-	
 	DEC C
 	JNC loopr
 
 	MOV C, 5
-	
 loopl:
-	
+	; ROL A, 5
 	CALL .rol
-	
 	DEC C
 	JNC loopl
 	
