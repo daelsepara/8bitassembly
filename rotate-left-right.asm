@@ -3,7 +3,10 @@
 	MOV A, [num]
 	CALL .ror
 	CALL .rol
-
+	
+	CALL .rol
+	CALL .ror
+	
 	HLT
 
 ; Rotate right
