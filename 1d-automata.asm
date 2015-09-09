@@ -12,7 +12,8 @@ cellval:
 	;
 	; A - cell value
 	PUSH C
-	
+	PUSH D
+
 	MOV D, world
 	MOV C, A
 	MOV B, A
@@ -62,20 +63,20 @@ cellval:
 	ADD A, 1	; cell value += 1
 	
 .z3:
+	POP D
 	POP C
 	RET
 	
 automata:
 	; C = 0
 	XOR C,C
+	; point to display offset
+	MOV D, 232
 
 .loop:
 	; compute cell value
 	MOV A, C
 	CALL cellval
-
-	; point to display offset
-	MOV D, 232
 	
 	; apply rule
 	MOV B,1
@@ -90,24 +91,15 @@ automata:
 	
 .set:
 	; set cell state on display
-	ADD D,C
 	MOV [D], B
 	
 	; process next cell
+	INC D
 	INC C
+	
 	CMP C, 24
 	JNZ .loop
 	
-	; check if we have reached iteration (generation) limit
-	MOV A, [genL]
-	CMP A, [limL]
-	JNZ .nz3
-
-	MOV A, [genH]
-	CMP A, [limH]
-	JZ .endautomata
-	
-.nz3:
 	; initialize copy-operation 
 	MOV A, world
 	MOV D, 232
@@ -132,17 +124,23 @@ automata:
 	MOV A, [genL]
 	INC A
 	MOV [genL], A
-	JNC automata
-	
-	; handle overflow
 	MOV A, [genH]
+
+	JNC .nc1
+
+	; handle overflow
 	INC A
 	MOV [genH], A
 
-	JMP automata
+.nc1:
 	
-.endautomata:
-	
+	; check if we have reached iteration (generation) limit
+	CMP A, [limH]
+	JNZ automata
+	MOV A, [genL]
+	CMP A, [limL]
+	JNZ automata
+
 	RET
 
 rule:
@@ -161,8 +159,8 @@ world:
 	DB 0
 	DB 0
 	DB 0
-	DB 0
 	DB 1
+	DB 0
 	DB 0
 	DB 0
 	DB 0
