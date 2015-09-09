@@ -6,8 +6,13 @@
 
 	HLT
 
-; Rotate right	
-.ror:
+; Rotate right
+;
+; Input: A = number
+;
+; Output: ROR A, 1
+;
+ror:
 	
 	MOV B, A
 	; rotate by shifting right once
@@ -23,6 +28,11 @@
 	RET
 
 ; Rotate left
+;
+; Input: A = number
+;
+; Output: ROL A, 1
+;
 .rol:
 	
 	MOV B, A
