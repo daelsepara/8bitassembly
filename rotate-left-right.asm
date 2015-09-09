@@ -1,11 +1,33 @@
 ; Rotate demo (ROR, ROL)
 
 	MOV A, [num]
+	
+	; ROR/ROL
 	CALL .ror
 	CALL .rol
 	
+	; ROL/ROR
 	CALL .rol
 	CALL .ror
+
+	
+	MOV C, 5
+	; ROR A, 5
+loopr:
+	
+	CALL .ror
+	
+	DEC C
+	JNC loopr
+
+	MOV C, 5
+	
+loopl:
+	
+	CALL .rol
+	
+	DEC C
+	JNC loopl
 	
 	HLT
 
