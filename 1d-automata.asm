@@ -30,7 +30,7 @@ cellval:
 	MOV C, world
 
 .nz2:
-	; intialize cell value to 0
+	; intialize cell value
 	MOV D,[A]
 	XOR A,A	
 	
