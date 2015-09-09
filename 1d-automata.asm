@@ -10,22 +10,22 @@ cellval:
 	PUSH C
 	PUSH D
 
-	; cell's exact location in memory (world)
+	; determine cell's exact location in memory (world)
 	MOV D, world
 	ADD A, D
 	MOV C, A
 	MOV B, A
 	
-	; ... left neighbor
+	; ... then left ...
 	DEC B
 	CMP B, world
 	JNBE .nz1
-	MOV B, w_end
+	MOV B, world_end
 
 .nz1:
-	; ... right neighbor
+	; ... and right neighbors
 	INC C
-	CMP C, w_end
+	CMP C, world_end
 	JBE .nz2
 	MOV C, world
 
@@ -34,20 +34,20 @@ cellval:
 	MOV D,[A]
 	XOR A,A	
 	
-	; if current cell is alive, cell value += 2
+	; if current cell alive, cell value += 2
 	OR D,D		
 	JZ .z1
 	MOV A, 2
 
 .z1:
-	; if left neighbor is alive, cell value += 4
+	; if left neighbor alive, cell value += 4
 	MOV D,[B]	
 	OR D,D
 	JZ .z2
 	ADD A, 4
 
 .z2:
-	; if right neighbor is alive, cell value += 1
+	; if right neighbor alive, cell value += 1
 	MOV D, [C]
 	OR D,D
 	JZ .z3
@@ -59,10 +59,9 @@ cellval:
 	RET
 
 automata:
-	; C = 0
-	XOR C,C
-	; point to display
-	MOV D, 232
+	; intialize loop, start at the end
+	MOV C, 23
+	MOV D, 255
 .loop:
 	; compute cell value
 	MOV A, C
@@ -77,27 +76,25 @@ automata:
 	MOV B, '1'	
 
 .set:
-	; display cell state
+	; render cell state on display
 	MOV [D], B
 
-	; process next cell
-	INC D
-	INC C
-	CMP C, 24
-	JNZ .loop
+	; repeat until the entire world has been rendered
+	DEC D
+	DEC C
+	JNC .loop
 
-	; copy cell state (display -> world)
+	; copy cell states from display -> world
 	MOV A, world
 	MOV D, 232
 	MOV C, 24
 
 .copy:
-	; live cells ('1' on display) are copied as 1, 0 otherwise
+	; live cells, i.e. '1' on display, are copied as 1, 0 otherwise
 	MOV B,[D]
 	AND B,1
 	MOV [A],B
 	
-	; copy next cell
 	INC A
 	INC D
 	DEC C
@@ -121,31 +118,38 @@ automata:
 	JNZ automata
 	RET
 
-rule:	DB 22 	; 1D-CA Rule to apply
-world:	DB 0	; initial configuration of the world (1 => alive, 0 => dead)
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 1
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-		DB 0
-w_end:	DB 0
+rule:
+	; 1D-CA Rule to apply
+	DB 22 	
+
+world:
+	; initial configuration of the world (1 => alive, 0 => dead)	
+	DB 0	
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 1
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+	DB 0
+world_end:
+	; world's end
+	DB 0
 
 ; generations (low, high bytes)
 genL:	DB 0	
