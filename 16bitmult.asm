@@ -78,8 +78,8 @@ mulr:
 	;         DA2  DA1        = MD * MC
 	;         BC1  BC0        = MA * MB
 	; +  BC3  BC2             = MD * MB
-    ; ------------------------------
-    ;   MSB1 MSB0 LSB1 LSB0
+	; ------------------------------
+	;   MSB1 MSB0 LSB1 LSB0
 	;
 	; Where: MSB1 = high 4-bits of MSB
 	;        MSB0 =  low 4-bits of MSB	 
