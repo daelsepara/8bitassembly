@@ -2,21 +2,11 @@
 ;	
 ; Warning: Extremely slow. Used only for demonstrations
 
-	JMP start
-
-Q:	DB 0
-R:	DB 0
-
-NUM1L: DB 0xC4
-NUM1H: DB 0x09
-NUM2L: DB 0x32
-NUM2H: DB 0x00	
-	
 start:
-	MOV A, [NUM1L]
-	MOV D, [NUM1H]
-	MOV C, [NUM2L]
-	MOV B, [NUM2H]
+	MOV A, [NUML]
+	MOV D, [NUMH]
+	MOV C, [DENL]
+	MOV B, [DENH]
 	
 .divcheck:
 	; check if D:A > B:C
@@ -38,16 +28,36 @@ start:
 	DEC D
 	
 .divloop2:
-	; Save Quotient
+	; save quotient
 	PUSH A
-	MOV A,[Q]
+	MOV A,[QL]
 	INC A
-	MOV [Q],A
+	MOV [QL], A
+	JNC .divloop3
+	
+	; handle overflow
+	MOV A, [QH]
+	INC A
+	MOV [QH], A
+	
+.divloop3:
+
 	POP A
 	JMP .divcheck
 	
 .divend:
 	; store remainder
-	MOV [R],A
+	MOV [RL], A
+	MOV [RH], D
 	
 	HLT
+
+QL:	DB 0
+QH:	DB 0
+RL:	DB 0
+RH:	DB 0
+
+NUML: DB 0x00
+NUMH: DB 0xDF
+DENL: DB 0x80
+DENH: DB 0x00
