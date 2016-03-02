@@ -83,8 +83,8 @@ mulr:
 	;
 	; Where: MSB1 = high 4-bits of MSB
 	;        MSB0 =  low 4-bits of MSB	 
-	;	     LSB1 = high 4-bits of LSB
-	; 	     LSB0 =  low 4-bits of LSB
+	;		 LSB1 = high 4-bits of LSB
+	;		 LSB0 =  low 4-bits of LSB
 	;
 	; Furthermore:
 	;	
